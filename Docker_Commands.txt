@@ -1,0 +1,80 @@
+List All Images: docker images
+
+Start Docker in Interactive Mode: docker run -ti ubuntu:latest bash
+
+Commit Command: docker commit 8351812cd1f3
+
+Docker Tag command: docker tag c178753cef6308bb431897faae1907661f5c0cac1bde96fad38606002befa8e1 test-image
+Docker Commands           
+
+Docker Tag command: docker commit <oldname> <newname>
+
+Delete Container after exit: docker run --rm -ti ubuntu bash -c "echo $USER; sleep 5; echo terminated"
+
+Run Container in the background: docker run -d -ti test-image bash
+
+Retrieve running container name: docker ps -a
+
+Delete all running container: docker rm $(docker ps -a -q)
+
+Connect to running container: docker attach gracious_beaver
+
+Detach from running container: Ctl+p Ctl+q
+
+Stop the container: exit
+
+Start the stopped container: docker start <dockername>
+
+Attach additional bash to running docker: docker exec -ti <name> bash
+
+Checking Logs: 
+1- docker run --name example -d test-image bash -c "cat /etc/password"
+2- docker log test-image
+
+***********Connecting 2 containers***********
+
+1. docker run --rm -ti --name server ubuntu:14.04 bash
+2. nc -lp 4321
+
+on the client container
+1. docker run --rm -ti --link server --name client ubuntu:14.04 bash
+2. nc server 4321
+
+****************Creating private Network************
+1. docker network create network1
+2. docker run --rm -ti --net=network1 --name server ubuntu:14.04 bash
+3. nc -lp 4321
+
+1. docker run --rm -ti --link server --net=network1 --name client --net=network1 ubuntu:14.04 bash
+2. nc server 4321
+
+************Shared Folder********************
+docker run --rm -ti -v /home/lalit/Desktop/CloudComputing:/shared-folder ubuntu:14.04 bash
+
+************Shared Folder between 2 different container********************
+docker run --rm -ti -v /shared-folder ubuntu:14.04 bash
+
+#name of previously started container : awesome_chatterjee
+use this command: docker ps -l
+docker run --rm -ti --volumes-from awesome_chatterjee ubuntu:14.04 bash
+
+********************Building Docker Images*********
+1. Create Dockerfile
+2. Use either vi or nano editor
+
+Dockerfile contents:
+FROM ubuntu:16.04
+RUN apt -y update
+RUN apt -y install emacs-nox
+
+**********Enabling Unrestricted Network on Docker*****************
+docker run -ti --rm --net=host ubuntu:16.04 bash
+
+Save the file
+$docker build -t ubuntu-emacs .
+
+********************Export Docker to tar file**********
+docker save -o saveimage/ssh-backup.tar  ssh-keybased
+
+********************Import Docker to tar file**********
+docker load --input saveimage/ssh-backup.tar
